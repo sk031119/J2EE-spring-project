@@ -75,6 +75,22 @@
                                    placeholder="e.g. heavy lifting, customer service, driving">
                         </div>
 
+                        <div class="mb-3">
+                            <label for="jobType" class="form-label">Job type (for worker search)</label>
+                            <select class="form-select" id="jobType" th:field="*{jobType}">
+                                <option value="">Not specified</option>
+                                <option value="general labor">General labor</option>
+                                <option value="delivery">Delivery / courier</option>
+                                <option value="events">Events / hospitality</option>
+                                <option value="cleaning">Cleaning</option>
+                                <option value="warehouse">Warehouse</option>
+                                <option value="retail">Retail</option>
+                                <option value="construction">Construction / trade</option>
+                                <option value="tech">Tech / office</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-primary" th:text="${jobPostDto.id != null} ? 'Update' : 'Create'">Submit</button>
                             <a th:href="@{/employer/dashboard}" class="btn btn-outline-secondary">Cancel</a>

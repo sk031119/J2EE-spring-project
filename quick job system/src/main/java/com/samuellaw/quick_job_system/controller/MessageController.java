@@ -36,7 +36,7 @@ public class MessageController {
     @GetMapping("/application/{applicationId}")
     public String viewThread(@PathVariable Long applicationId, Authentication auth, Model model) {
         User currentUser = userService.findByEmail(auth.getName());
-        JobApplication application = jobApplicationService.findById(applicationId);
+        JobApplication application = jobApplicationService.findByIdForMessaging(applicationId);
 
         // Verify access: only the worker or the employer can view
         boolean isWorker = application.getWorker().getId().equals(currentUser.getId());
@@ -66,7 +66,7 @@ public class MessageController {
         }
 
         User currentUser = userService.findByEmail(auth.getName());
-        JobApplication application = jobApplicationService.findById(applicationId);
+        JobApplication application = jobApplicationService.findByIdForMessaging(applicationId);
 
         // Verify access
         boolean isWorker = application.getWorker().getId().equals(currentUser.getId());

@@ -17,6 +17,51 @@
     <div class="container py-4">
         <h1 class="mb-4">Available Jobs</h1>
 
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <h2 class="h6 text-muted text-uppercase mb-3">Search &amp; filters</h2>
+                <form th:action="@{/worker/jobs}" method="get" th:object="${search}" class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label small mb-0" for="q">Keywords</label>
+                        <input type="text" class="form-control" id="q" th:field="*{q}" placeholder="Title or description">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small mb-0" for="location">Area / location</label>
+                        <input type="text" class="form-control" id="location" th:field="*{location}" placeholder="City, region...">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small mb-0" for="jobType">Job type</label>
+                        <select class="form-select" id="jobType" th:field="*{jobType}">
+                            <option value="">Any type</option>
+                            <option value="general labor">General labor</option>
+                            <option value="delivery">Delivery / courier</option>
+                            <option value="events">Events / hospitality</option>
+                            <option value="cleaning">Cleaning</option>
+                            <option value="warehouse">Warehouse</option>
+                            <option value="retail">Retail</option>
+                            <option value="construction">Construction / trade</option>
+                            <option value="tech">Tech / office</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small mb-0" for="minPay">Min pay ($)</label>
+                        <input type="number" step="0.01" class="form-control" id="minPay" th:field="*{minPay}" placeholder="0">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small mb-0" for="maxPay">Max pay ($)</label>
+                        <input type="number" step="0.01" class="form-control" id="maxPay" th:field="*{maxPay}">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary w-100">Apply filters</button>
+                    </div>
+                    <div class="col-md-3">
+                        <a th:href="@{/worker/jobs}" class="btn btn-outline-secondary w-100">Reset</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <div th:if="${jobs.isEmpty()}" class="alert alert-info">
             No open jobs available right now. Check back later.
         </div>
@@ -26,6 +71,9 @@
                 <div class="card h-100">
                     <div class="card-body">
                         <h5 class="card-title" th:text="${job.title}">Job Title</h5>
+                        <p class="card-text text-muted small mb-1" th:if="${job.jobType != null}">
+                            <span class="badge bg-secondary" th:text="${job.jobType}">type</span>
+                        </p>
                         <p class="card-text text-muted" th:text="${#strings.abbreviate(job.description, 100)}">Description</p>
                         <ul class="list-unstyled">
                             <li><strong>Location:</strong> <span th:text="${job.location}">Location</span></li>
@@ -44,14 +92,14 @@
         <nav th:if="${jobs.totalPages > 1}" class="mt-4">
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${jobs.first} ? 'disabled'">
-                    <a class="page-link" th:href="@{/worker/jobs(page=${jobs.number - 1})}">&laquo;</a>
+                    <a class="page-link" th:href="@{/worker/jobs(page=${jobs.number - 1},q=${search.q},location=${search.location},jobType=${search.jobType},minPay=${search.minPay},maxPay=${search.maxPay})}">&laquo;</a>
                 </li>
                 <li class="page-item" th:each="i : ${#numbers.sequence(0, jobs.totalPages - 1)}"
                     th:classappend="${i == jobs.number} ? 'active'">
-                    <a class="page-link" th:href="@{/worker/jobs(page=${i})}" th:text="${i + 1}">1</a>
+                    <a class="page-link" th:href="@{/worker/jobs(page=${i},q=${search.q},location=${search.location},jobType=${search.jobType},minPay=${search.minPay},maxPay=${search.maxPay})}" th:text="${i + 1}">1</a>
                 </li>
                 <li class="page-item" th:classappend="${jobs.last} ? 'disabled'">
-                    <a class="page-link" th:href="@{/worker/jobs(page=${jobs.number + 1})}">&raquo;</a>
+                    <a class="page-link" th:href="@{/worker/jobs(page=${jobs.number + 1},q=${search.q},location=${search.location},jobType=${search.jobType},minPay=${search.minPay},maxPay=${search.maxPay})}">&raquo;</a>
                 </li>
             </ul>
         </nav>

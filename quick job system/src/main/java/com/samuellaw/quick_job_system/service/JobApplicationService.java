@@ -96,12 +96,17 @@ public class JobApplicationService {
                 .orElseThrow(() -> new ResourceNotFoundException("Application not found with id: " + id));
     }
 
+    public JobApplication findByIdForMessaging(Long id) {
+        return jobApplicationRepository.findByIdWithParticipantDetails(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Application not found with id: " + id));
+    }
+
     public List<JobApplication> findByWorker(User worker) {
-        return jobApplicationRepository.findByWorker(worker);
+        return jobApplicationRepository.findByWorkerWithJobAndEmployer(worker);
     }
 
     public List<JobApplication> findByJobPost(JobPost jobPost) {
-        return jobApplicationRepository.findByJobPost(jobPost);
+        return jobApplicationRepository.findByJobPostWithWorker(jobPost);
     }
 
     public List<JobApplication> findAll() {

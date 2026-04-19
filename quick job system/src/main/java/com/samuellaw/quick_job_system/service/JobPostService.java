@@ -2,11 +2,13 @@
 package com.samuellaw.quick_job_system.service;
 
 import com.samuellaw.quick_job_system.dto.JobPostDto;
+import com.samuellaw.quick_job_system.dto.JobSearchParams;
 import com.samuellaw.quick_job_system.entity.EmployerProfile;
 import com.samuellaw.quick_job_system.entity.JobPost;
 import com.samuellaw.quick_job_system.enums.JobStatus;
 import com.samuellaw.quick_job_system.exception.ResourceNotFoundException;
 import com.samuellaw.quick_job_system.repository.JobPostRepository;
+import com.samuellaw.quick_job_system.repository.JobPostSpecifications;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -35,6 +37,7 @@ public class JobPostService {
                 .startTime(dto.getStartTime())
                 .endTime(dto.getEndTime())
                 .requiredSkills(dto.getRequiredSkills())
+                .jobType(normalizeJobType(dto.getJobType()))
                 .workersNeeded(dto.getWorkersNeeded())
                 .status(JobStatus.OPEN)
                 .employerProfile(employerProfile)
@@ -61,6 +64,7 @@ public class JobPostService {
         jobPost.setStartTime(dto.getStartTime());
         jobPost.setEndTime(dto.getEndTime());
         jobPost.setRequiredSkills(dto.getRequiredSkills());
+        jobPost.setJobType(normalizeJobType(dto.getJobType()));
         jobPost.setWorkersNeeded(dto.getWorkersNeeded());
 
         log.info("Job post updated with id: {}", id);
@@ -88,12 +92,24 @@ public class JobPostService {
     }
 
     public JobPost findById(Long id) {
-        return jobPostRepository.findById(id)
+        return jobPostRepository.findWithEmployerProfileById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Job post not found with id: " + id));
     }
 
     public Page<JobPost> findOpenJobs(Pageable pageable) {
-        return jobPostRepository.findByStatus(JobStatus.OPEN, pageable);
+        return searchOpenJobs(new JobSearchParams(), pageable);
+    }
+
+    public Page<JobPost> searchOpenJobs(JobSearchParams params, Pageable pageable) {
+        return jobPostRepository.findAll(JobPostSpecifications.openJobsMatching(params), pageable);
+    }
+
+    private static String normalizeJobType(String jobType) {
+        if (jobType == null) {
+            return null;
+        }
+        String t = jobType.trim();
+        return t.isEmpty() ? null : t.toLowerCase();
     }
 
     public List<JobPost> findByEmployer(EmployerProfile employerProfile) {
@@ -101,7 +117,7 @@ public class JobPostService {
     }
 
     public List<JobPost> findAll() {
-        return jobPostRepository.findAll();
+        return jobPostRepository.findAllWithEmployerProfile();
     }
 
     // Admin: delete any job post

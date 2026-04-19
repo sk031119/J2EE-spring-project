@@ -32,7 +32,7 @@ public class MessageApiController {
     @GetMapping
     public ResponseEntity<List<Message>> getMessages(@PathVariable Long applicationId) {
         log.debug("API: GET /api/applications/{}/messages", applicationId);
-        JobApplication application = jobApplicationService.findById(applicationId);
+        JobApplication application = jobApplicationService.findByIdForMessaging(applicationId);
         return ResponseEntity.ok(messageService.getMessagesByApplication(application));
     }
 
@@ -42,7 +42,7 @@ public class MessageApiController {
                                                 Authentication auth) {
         log.debug("API: POST /api/applications/{}/messages", applicationId);
         User sender = userService.findByEmail(auth.getName());
-        JobApplication application = jobApplicationService.findById(applicationId);
+        JobApplication application = jobApplicationService.findByIdForMessaging(applicationId);
         Message message = messageService.sendMessage(application, sender, dto.getContent());
         return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }

@@ -31,6 +31,7 @@
                             <li class="mb-2"><strong>Pay Rate:</strong> $<span th:text="${job.payRate}">0</span></li>
                             <li class="mb-2"><strong>Workers Needed:</strong> <span th:text="${job.workersNeeded}">1</span></li>
                             <li class="mb-2"><strong>Required Skills:</strong> <span th:text="${job.requiredSkills} ?: 'None specified'">Skills</span></li>
+                            <li class="mb-2" th:if="${job.jobType != null}"><strong>Job type:</strong> <span class="badge bg-secondary" th:text="${job.jobType}">Type</span></li>
                         </ul>
                     </div>
                     <div class="col-md-6">
@@ -43,12 +44,14 @@
                     </div>
                 </div>
 
-                <div class="mt-4" th:if="${job.status.name() == 'OPEN'}">
+                <div class="mt-4 d-flex flex-wrap gap-2 align-items-center" th:if="${job.status.name() == 'OPEN'}">
+                    <a th:href="@{/worker/jobs/{id}/chat(id=${job.id})}" class="btn btn-outline-primary btn-lg"
+                       th:text="${hasJobChat} ? 'Open messages' : 'Message employer'">Message employer</a>
                     <div th:if="${alreadyApplied}">
                         <span class="badge bg-info">You have already applied for this job</span>
                     </div>
                     <div th:unless="${alreadyApplied}">
-                        <form th:action="@{/worker/jobs/{id}/apply(id=${job.id})}" method="post">
+                        <form th:action="@{/worker/jobs/{id}/apply(id=${job.id})}" method="post" class="d-inline">
                             <button type="submit" class="btn btn-primary btn-lg" onclick="return confirm('Apply for this job?')">Apply Now</button>
                         </form>
                     </div>

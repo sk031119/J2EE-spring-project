@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chats for job - QuickJob</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+<nav th:replace="~{layout :: navbar}"></nav>
+<div th:replace="~{layout :: alerts}"></div>
+
+<main class="flex-grow-1">
+    <div class="container py-4">
+        <a th:href="@{/employer/jobs/{id}(id=${job.id})}" class="btn btn-outline-secondary mb-3">&larr; Job detail</a>
+        <h1 class="h4 mb-3">Chats: <span th:text="${job.title}">Job</span></h1>
+
+        <div th:if="${#lists.isEmpty(conversations)}" class="alert alert-info">
+            No worker messages for this job yet.
+        </div>
+
+        <div class="list-group" th:if="${!#lists.isEmpty(conversations)}">
+            <a th:each="c : ${conversations}"
+               th:href="@{/employer/jobs/{jid}/chats/{cid}(jid=${job.id},cid=${c.id})}"
+               class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                <span th:text="${c.worker.fullName}">Worker</span>
+                <small class="text-muted" th:text="${#temporals.format(c.updatedAt, 'MMM d HH:mm')}">Date</small>
+            </a>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{layout :: footer}"></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

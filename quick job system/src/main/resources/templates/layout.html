@@ -19,11 +19,17 @@
                 <li class="nav-item" sec:authorize="hasRole('EMPLOYER')">
                     <a class="nav-link" th:href="@{/employer/jobs/new}">Post Job</a>
                 </li>
+                <li class="nav-item" sec:authorize="hasRole('EMPLOYER')">
+                    <a class="nav-link" th:href="@{/employer/conversations}">Worker messages</a>
+                </li>
                 <li class="nav-item" sec:authorize="hasRole('WORKER')">
                     <a class="nav-link" th:href="@{/worker/jobs}">Browse Jobs</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasRole('WORKER')">
                     <a class="nav-link" th:href="@{/worker/applications}">My Applications</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('WORKER')">
+                    <a class="nav-link" th:href="@{/worker/conversations}">Job messages</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasRole('ADMIN')">
                     <a class="nav-link" th:href="@{/admin/dashboard}">Dashboard</a>

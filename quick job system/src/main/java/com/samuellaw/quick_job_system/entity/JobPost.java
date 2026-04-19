@@ -55,6 +55,10 @@ public class JobPost {
 
     private String requiredSkills;
 
+    /** Category for search/filter (e.g. delivery, cleaning). Optional. */
+    @Column(length = 80)
+    private String jobType;
+
     @Positive
     @Column(nullable = false)
     @Builder.Default

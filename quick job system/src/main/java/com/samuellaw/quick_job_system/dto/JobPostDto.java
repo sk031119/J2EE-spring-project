@@ -38,6 +38,9 @@ public class JobPostDto {
 
     private String requiredSkills;
 
+    /** Job category for filtering (optional). */
+    private String jobType;
+
     @Positive(message = "Workers needed must be greater than 0")
     @Builder.Default
     private int workersNeeded = 1;

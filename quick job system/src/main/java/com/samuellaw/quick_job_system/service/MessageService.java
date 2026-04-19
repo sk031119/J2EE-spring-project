@@ -35,6 +35,6 @@ public class MessageService {
     }
 
     public List<Message> getMessagesByApplication(JobApplication application) {
-        return messageRepository.findByJobApplicationOrderByCreatedAtAsc(application);
+        return messageRepository.findByJobApplicationWithSenderOrderByCreatedAt(application);
     }
 }

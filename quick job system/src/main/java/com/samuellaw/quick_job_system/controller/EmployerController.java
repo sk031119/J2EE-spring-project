@@ -5,8 +5,10 @@
 package com.samuellaw.quick_job_system.controller;
 
 import com.samuellaw.quick_job_system.dto.JobPostDto;
+import com.samuellaw.quick_job_system.dto.MessageDto;
 import com.samuellaw.quick_job_system.entity.EmployerProfile;
 import com.samuellaw.quick_job_system.entity.JobApplication;
+import com.samuellaw.quick_job_system.entity.JobConversation;
 import com.samuellaw.quick_job_system.entity.JobPost;
 import com.samuellaw.quick_job_system.entity.User;
 import com.samuellaw.quick_job_system.enums.JobStatus;
@@ -33,6 +35,7 @@ public class EmployerController {
     private final EmployerProfileService employerProfileService;
     private final JobPostService jobPostService;
     private final JobApplicationService jobApplicationService;
+    private final JobConversationService jobConversationService;
 
     private EmployerProfile getEmployerProfile(Authentication auth) {
         User user = userService.findByEmail(auth.getName());
@@ -86,6 +89,7 @@ public class EmployerController {
                 .startTime(job.getStartTime())
                 .endTime(job.getEndTime())
                 .requiredSkills(job.getRequiredSkills())
+                .jobType(job.getJobType())
                 .workersNeeded(job.getWorkersNeeded())
                 .build();
 
@@ -141,9 +145,77 @@ public class EmployerController {
         }
 
         List<JobApplication> applications = jobApplicationService.findByJobPost(job);
+        List<JobConversation> inquiries = jobConversationService.listForEmployerJob(id, profile);
         model.addAttribute("job", job);
         model.addAttribute("applications", applications);
+        model.addAttribute("jobInquiries", inquiries);
         return "employer/job-detail";
+    }
+
+    @GetMapping("/conversations")
+    public String employerConversations(Authentication auth, Model model) {
+        EmployerProfile profile = getEmployerProfile(auth);
+        model.addAttribute("conversations", jobConversationService.listForEmployerProfile(profile));
+        return "employer/conversations";
+    }
+
+    @GetMapping("/jobs/{jobId}/chats")
+    public String jobChatsList(@PathVariable Long jobId, Authentication auth, Model model) {
+        EmployerProfile profile = getEmployerProfile(auth);
+        JobPost job = jobPostService.findById(jobId);
+        if (!job.getEmployerProfile().getId().equals(profile.getId())) {
+            return "redirect:/employer/dashboard";
+        }
+        model.addAttribute("job", job);
+        model.addAttribute("conversations", jobConversationService.listForEmployerJob(jobId, profile));
+        return "employer/job-chats";
+    }
+
+    @GetMapping("/jobs/{jobId}/chats/{conversationId}")
+    public String employerJobChat(@PathVariable Long jobId, @PathVariable Long conversationId,
+                                  Authentication auth, Model model) {
+        User user = userService.findByEmail(auth.getName());
+        EmployerProfile profile = getEmployerProfile(auth);
+        JobPost job = jobPostService.findById(jobId);
+        if (!job.getEmployerProfile().getId().equals(profile.getId())) {
+            return "redirect:/employer/dashboard";
+        }
+        JobConversation conv = jobConversationService.getConversationForParticipant(conversationId, user);
+        if (!conv.getJobPost().getId().equals(jobId)) {
+            return "redirect:/employer/jobs/" + jobId + "/chats";
+        }
+        populateEmployerJobChat(model, conv, user);
+        model.addAttribute("chatKind", "employer");
+        model.addAttribute("messageDto", new MessageDto());
+        return "messages/job-inquiry";
+    }
+
+    @PostMapping("/jobs/{jobId}/chats/{conversationId}")
+    public String postEmployerJobChat(@PathVariable Long jobId, @PathVariable Long conversationId,
+                                      @Valid @ModelAttribute("messageDto") MessageDto dto,
+                                      BindingResult result, Authentication auth,
+                                      RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Message cannot be empty");
+            return "redirect:/employer/jobs/" + jobId + "/chats/" + conversationId;
+        }
+        User user = userService.findByEmail(auth.getName());
+        JobConversation conv = jobConversationService.getConversationForParticipant(conversationId, user);
+        if (!conv.getJobPost().getId().equals(jobId)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Invalid conversation");
+            return "redirect:/employer/dashboard";
+        }
+        jobConversationService.sendMessage(conversationId, user, dto.getContent());
+        redirectAttributes.addFlashAttribute("successMessage", "Message sent");
+        return "redirect:/employer/jobs/" + jobId + "/chats/" + conversationId;
+    }
+
+    private void populateEmployerJobChat(Model model, JobConversation conv, User currentUser) {
+        model.addAttribute("conversation", conv);
+        model.addAttribute("job", conv.getJobPost());
+        model.addAttribute("messages", jobConversationService.listMessages(conv.getId(), currentUser));
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("otherPartyLabel", conv.getWorker().getFullName());
     }
 
     @PostMapping("/applications/{id}/approve")
