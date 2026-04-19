@@ -16,8 +16,12 @@
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
-                <div class="card p-4">
-                    <h2 class="text-center mb-4">Register</h2>
+                <div class="card auth-card p-4">
+                    <div class="auth-brand mb-3">QuickJob</div>
+                    <div class="auth-tabs mb-4" role="tablist">
+                        <a th:href="@{/login}" class="auth-tab">Login</a>
+                        <a th:href="@{/register}" class="auth-tab active" aria-current="page">Register</a>
+                    </div>
 
                     <form th:action="@{/register}" th:object="${registrationDto}" method="post" id="registerForm">
                         <div class="mb-3">
@@ -78,8 +82,8 @@
                         <button type="submit" class="btn btn-primary w-100">Register</button>
                     </form>
 
-                    <p class="text-center mt-3">
-                        Already have an account? <a th:href="@{/login}">Login here</a>
+                    <p class="text-center mt-3 text-muted small">
+                        Already have an account? <a th:href="@{/login}">Sign in</a>
                     </p>
                 </div>
             </div>

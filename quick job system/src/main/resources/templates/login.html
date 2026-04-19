@@ -15,9 +15,13 @@
 <main class="flex-grow-1">
     <div class="container py-5">
         <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-4">
-                <div class="card p-4">
-                    <h2 class="text-center mb-4">Login</h2>
+            <div class="col-md-6 col-lg-5">
+                <div class="card auth-card p-4">
+                    <div class="auth-brand mb-3">QuickJob</div>
+                    <div class="auth-tabs mb-4" role="tablist">
+                        <a th:href="@{/login}" class="auth-tab active" aria-current="page">Login</a>
+                        <a th:href="@{/register}" class="auth-tab">Register</a>
+                    </div>
 
                     <div th:if="${param.error}" class="alert alert-danger">
                         Invalid email or password.
@@ -43,8 +47,8 @@
                         <button type="submit" class="btn btn-primary w-100">Login</button>
                     </form>
 
-                    <p class="text-center mt-3">
-                        Don't have an account? <a th:href="@{/register}">Register here</a>
+                    <p class="text-center mt-3 text-muted small">
+                        New here? <a th:href="@{/register}">Create an account</a>
                     </p>
                 </div>
             </div>

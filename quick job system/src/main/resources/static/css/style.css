@@ -1,17 +1,246 @@
-/* Requirements: Custom styles for QuickJob application (Bootstrap loaded via CDN) */
+/* QuickJob — black / high-contrast theme (aligned with report screenshots) */
 
-/* General body styling */
+:root {
+    --qj-black: #111111;
+    --qj-black-soft: #1a1a1a;
+    --qj-black-hover: #2d2d2d;
+    --qj-page-bg: #f4f4f4;
+    --qj-card-bg: #ffffff;
+    --qj-border: #e0e0e0;
+    --qj-border-input: #d0d0d0;
+    --qj-text: #111111;
+    --qj-muted: #6b6b6b;
+    --qj-accent-purple: #6f42c1;
+    --qj-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Base --- */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    background-color: var(--qj-page-bg);
+    color: var(--qj-text);
 }
 
-/* Card styling */
+main {
+    color: var(--qj-text);
+}
+
+a:not(.btn):not(.nav-link):not(.auth-tab):not(.page-link):not(.navbar-brand) {
+    color: var(--qj-black);
+    font-weight: 500;
+}
+
+a:not(.btn):not(.nav-link):not(.auth-tab):not(.page-link):not(.navbar-brand):hover {
+    color: var(--qj-black-hover);
+}
+
+.navbar .navbar-brand {
+    color: #fff !important;
+}
+
+/* --- Bootstrap primary = black (screenshot: black buttons) --- */
+.btn-primary {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: var(--qj-black);
+    --bs-btn-border-color: var(--qj-black);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: var(--qj-black-hover);
+    --bs-btn-hover-border-color: var(--qj-black-hover);
+    --bs-btn-focus-shadow-rgb: 17, 17, 17;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #000000;
+    --bs-btn-active-border-color: #000000;
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #888;
+    --bs-btn-disabled-border-color: #888;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.btn-lg {
+    border-radius: 8px;
+}
+
+.btn-outline-secondary {
+    --bs-btn-color: var(--qj-text);
+    --bs-btn-border-color: var(--qj-border-input);
+    --bs-btn-hover-color: var(--qj-text);
+    --bs-btn-hover-bg: #fff;
+    --bs-btn-hover-border-color: #bbb;
+    --bs-btn-active-color: var(--qj-text);
+    --bs-btn-active-bg: #ececec;
+    border-radius: 6px;
+}
+
+/* --- Navbar: pure black bar --- */
+.navbar.qj-navbar {
+    background-color: #000000 !important;
+    border-bottom: 1px solid #222;
+}
+
+.navbar.qj-navbar .navbar-brand {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.navbar.qj-navbar .nav-link {
+    color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.navbar.qj-navbar .nav-link:hover {
+    color: #fff !important;
+}
+
+.navbar.qj-navbar .btn-outline-light {
+    --bs-btn-border-color: rgba(255, 255, 255, 0.5);
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+/* --- Cards (white panels on gray page) --- */
 .card {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-    border: 1px solid #e0e0e0;
+    background-color: var(--qj-card-bg);
+    border: 1px solid var(--qj-border);
+    border-radius: 10px;
+    box-shadow: var(--qj-shadow-card);
 }
 
-/* Message thread styling */
+.card-header {
+    background-color: var(--qj-card-bg);
+    border-bottom-color: var(--qj-border);
+    font-weight: 600;
+}
+
+/* --- Forms --- */
+.form-control,
+.form-select {
+    border-radius: 6px;
+    border-color: var(--qj-border-input);
+    background-color: #fff;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--qj-black);
+    box-shadow: 0 0 0 0.2rem rgba(17, 17, 17, 0.12);
+}
+
+.form-label {
+    color: var(--qj-text);
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+/* --- Auth card (login / register) --- */
+.auth-card {
+    border-radius: 12px;
+    border: 1px solid var(--qj-border);
+    box-shadow: var(--qj-shadow-card);
+}
+
+.auth-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--qj-text);
+    letter-spacing: -0.03em;
+}
+
+.auth-tabs {
+    display: flex;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--qj-border);
+}
+
+.auth-tab {
+    flex: 1;
+    text-align: center;
+    padding: 0.65rem 1rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    color: #444;
+    background: #ececec;
+    border: none;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.auth-tab:hover {
+    background: #e0e0e0;
+    color: var(--qj-text);
+}
+
+.auth-tab.active {
+    background: var(--qj-black);
+    color: #fff;
+}
+
+.auth-tab.active:hover {
+    color: #fff;
+    background: var(--qj-black-soft);
+}
+
+/* --- Tables --- */
+.table {
+    --bs-table-bg: transparent;
+}
+
+.table thead th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--qj-muted);
+    border-bottom-color: var(--qj-border);
+    font-weight: 600;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+    --bs-table-accent-bg: rgba(0, 0, 0, 0.02);
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* --- Badges --- */
+.badge.bg-secondary {
+    background-color: #333 !important;
+    font-weight: 500;
+}
+
+/* Purple accent for role-style badges (optional) */
+.badge.qj-badge-accent {
+    background-color: transparent !important;
+    color: var(--qj-accent-purple) !important;
+    border: 1px solid var(--qj-accent-purple);
+    font-weight: 600;
+}
+
+/* --- Alerts (readable on light gray page) --- */
+.alert {
+    border-radius: 8px;
+    border-width: 1px;
+}
+
+.alert-info {
+    background-color: #f0f4f8;
+    border-color: #c5d4e0;
+    color: #1a3a52;
+}
+
+/* --- Pagination --- */
+.pagination .page-link {
+    color: var(--qj-black);
+    border-color: var(--qj-border);
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--qj-black);
+    border-color: var(--qj-black);
+}
+
+/* --- Message thread --- */
 .message-thread {
     max-height: 500px;
     overflow-y: auto;
@@ -19,15 +248,17 @@ body {
 }
 
 .message-thread .card.border-primary {
-    background-color: #f0f7ff;
+    background-color: #f5f5f5;
+    border-color: var(--qj-border) !important;
 }
 
-/* Job inquiry chat (bubbles) */
+/* --- Chat bubbles (black “me”, light “them”) --- */
 .chat-window .chat-scroll {
     max-height: 420px;
     overflow-y: auto;
-    background: #f8f9fa;
+    background: #ececec;
     border-radius: 0.5rem;
+    border: 1px solid var(--qj-border);
 }
 
 .chat-row {
@@ -48,14 +279,14 @@ body {
     padding: 0.55rem 0.85rem;
     border-radius: 1rem;
     background: #fff;
-    border: 1px solid #e2e6ea;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--qj-border);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .chat-row-me .chat-bubble {
-    background: #0d6efd;
+    background: var(--qj-black);
     color: #fff;
-    border-color: #0b5ed7;
+    border-color: var(--qj-black);
 }
 
 .chat-row-me .chat-meta {
@@ -67,7 +298,18 @@ body {
     word-break: break-word;
 }
 
-/* Footer always at bottom */
+/* --- Footer --- */
+.footer.qj-footer {
+    background-color: #000000 !important;
+    border-top: 1px solid #222;
+}
+
 .footer {
     margin-top: auto;
+}
+
+/* --- Landing hero --- */
+.display-4 {
+    font-weight: 700;
+    letter-spacing: -0.03em;
 }
